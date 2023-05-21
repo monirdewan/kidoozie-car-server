@@ -29,7 +29,11 @@ async function run() {
     await client.connect();
     // Send a ping to confirm a successful connection
     const carCollection = client.db('kidooziecarDB').collection('cars');
-   
+    app.get('/products', async (req, res) => {
+      const limit = 20; // Set the data limit to 20
+      const result = await carCollection.find().limit(limit).toArray();
+      res.send(result);
+    });
     app.get('/products/:category', async(req, res)=>{
       const categoryfind = req.params.category;
       const result = await carCollection.find({
