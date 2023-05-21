@@ -62,6 +62,37 @@ async function run() {
         res.send(result)
     })
 
+    app.get('/update/:id', async(req, res)=>{
+      const id = req.params.id;
+      const query = {_id : new ObjectId(id)}
+      const result =await carCollection.findOne(query)
+      res.send(result)
+    })
+
+    app.put('/update/:id',async(req, res) =>{
+      const id = req.params.id;
+      const filter = {_id : new ObjectId(id)};
+      const options = {upsert:true};
+      const updateProduct = req.body;
+
+      const update = {
+        $set:{
+          price:updateProduct.price,
+          quantity:updateProduct.quantity,
+          description:updateProduct.description
+        }
+      }
+      const result = await carCollection.updateOne(filter,update,options)
+      res.send(result)
+    })
+
+    app.delete('/update/:id', async(req, res)=>{
+      const id = req.params.id;
+      const query = {_id : new ObjectId(id)};
+      const result = await carCollection.deleteOne(query)
+      res.send(result)
+    })
+
     
     
     await client.db("admin").command({ ping: 1 });
